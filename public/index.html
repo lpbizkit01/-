@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>퀴즈 아레나 - 입장</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏟️</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- 입장 / 캐릭터 꾸미기 -->
+  <div id="join-screen">
+    <div class="join-card">
+      <h1>🏟️ 퀴즈 아레나</h1>
+      <p class="sub">캐릭터를 꾸미고 교실에 입장하세요!</p>
+
+      <div id="preview-wrap">
+        <canvas id="preview" width="140" height="140"></canvas>
+      </div>
+
+      <label>닉네임</label>
+      <input type="text" id="nickname" maxlength="12" placeholder="예: 홍길동" autocomplete="off">
+
+      <label>색깔</label>
+      <div class="swatches" id="swatches"></div>
+
+      <label>꾸미기</label>
+      <div class="acc-row" id="accessories"></div>
+
+      <button class="primary" id="join-btn">입장하기</button>
+      <div id="join-error"></div>
+    </div>
+  </div>
+
+  <!-- 게임 화면 -->
+  <div id="game-screen" class="hidden">
+    <div id="hud">
+      <div id="hud-top">
+        <div id="my-hearts">❤️❤️❤️</div>
+        <div id="timer" class="hidden">30</div>
+      </div>
+      <div id="question-text">잠시만 기다려 주세요…</div>
+      <div id="phase-hint">선생님이 문제를 시작하면 화면에 나타나요.</div>
+    </div>
+
+    <div id="canvas-wrap">
+      <canvas id="game-canvas"></canvas>
+      <div id="dead-banner" class="hidden">💀 탈락했어요! 유령으로 구경할 수 있어요</div>
+      <div id="result-overlay" class="overlay hidden">
+        <div class="overlay-card">
+          <div class="big" id="result-emoji">⭕</div>
+          <h2 id="result-title">정답!</h2>
+          <p id="result-desc"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="subjective-bar" class="hidden">
+      <input type="text" id="subjective-input" maxlength="100" placeholder="답을 입력하세요 (비밀이에요!)" autocomplete="off">
+      <button class="primary" id="subjective-submit">제출</button>
+      <span id="subjective-status"></span>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/render.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>

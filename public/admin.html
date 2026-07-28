@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>퀴즈 아레나 - 관리자</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔑</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin">
+  <!-- 로그인 -->
+  <div id="login-screen">
+    <div class="join-card">
+      <h1>🔑 관리자 로그인</h1>
+      <p class="sub">관리자 PIN을 입력하세요 (기본값: 1234)</p>
+      <label>PIN</label>
+      <input type="text" id="pin" inputmode="numeric" placeholder="PIN 입력" autocomplete="off">
+      <button class="primary" id="login-btn" style="width:100%; margin-top:16px;">로그인</button>
+      <div id="login-error" style="color:#e05c5c; text-align:center; margin-top:10px; min-height:18px; font-size:14px;"></div>
+    </div>
+  </div>
+
+  <!-- 관리자 화면 -->
+  <div id="admin-app" class="hidden">
+    <!-- 좌측: 컨트롤 -->
+    <aside id="admin-side">
+      <div class="section">
+        <h2>⚙️ 게임 설정</h2>
+        <div class="card">
+          <div class="form-row">
+            <label>학생 하트(체력) 개수 <span class="pill" id="hearts-now">현재: 3</span></label>
+            <div class="form-inline">
+              <input type="number" id="hearts-input" min="1" max="10" value="3">
+              <button class="ghost small" id="hearts-apply">적용</button>
+            </div>
+            <p class="notice">게임 시작 전(대기 중)에 변경하면 모든 학생에게 바로 반영돼요.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📝 문제 관리 <button class="primary small" id="q-new">+ 새 문제</button></h2>
+        <div id="q-list"></div>
+
+        <!-- 문제 편집 폼 -->
+        <div id="q-form" class="card editing hidden">
+          <div class="form-row">
+            <label>유형</label>
+            <select id="qf-type">
+              <option value="ox">OX 퀴즈</option>
+              <option value="choice">객관식 (2~4지선다)</option>
+              <option value="subjective">주관식</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>문제 내용</label>
+            <textarea id="qf-text" rows="2" placeholder="문제를 입력하세요"></textarea>
+          </div>
+
+          <div id="qf-ox-wrap" class="form-row">
+            <label>정답</label>
+            <select id="qf-ox-answer">
+              <option value="0">O</option>
+              <option value="1">X</option>
+            </select>
+          </div>
+
+          <div id="qf-choice-wrap" class="hidden">
+            <div class="form-row"><label>보기 (빈칸은 제외됨)</label>
+              <input type="text" id="qf-c0" placeholder="보기 ①" style="margin-bottom:6px;">
+              <input type="text" id="qf-c1" placeholder="보기 ②" style="margin-bottom:6px;">
+              <input type="text" id="qf-c2" placeholder="보기 ③ (선택)" style="margin-bottom:6px;">
+              <input type="text" id="qf-c3" placeholder="보기 ④ (선택)">
+            </div>
+            <div class="form-row">
+              <label>정답 번호</label>
+              <select id="qf-choice-answer">
+                <option value="0">①</option>
+                <option value="1">②</option>
+                <option value="2">③</option>
+                <option value="3">④</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="qf-subj-wrap" class="form-row hidden">
+            <label>정답 (자동 채점 제안용, 비워도 됨)</label>
+            <input type="text" id="qf-subj-answer" placeholder="예: 세종대왕">
+            <p class="notice">공백/대소문자를 무시하고 비교해 자동 채점을 제안하고, 최종 판정은 선생님이 해요.</p>
+          </div>
+
+          <div class="form-row">
+            <label>제한 시간 (초)</label>
+            <input type="number" id="qf-time" min="5" max="300" value="30">
+          </div>
+
+          <div class="form-inline">
+            <button class="primary small" id="qf-save">💾 저장</button>
+            <button class="ghost small" id="qf-cancel">취소</button>
+            <button class="danger small hidden" id="qf-delete">삭제</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🎮 진행</h2>
+        <div class="card">
+          <div class="form-row">
+            <label>출제할 문제</label>
+            <select id="run-question"></select>
+          </div>
+          <div class="form-inline" style="margin-bottom:8px;">
+            <button class="primary" id="run-start" style="flex:1;">▶ 문제 시작</button>
+            <button class="ghost" id="run-finish">⏹ 바로 마감</button>
+          </div>
+          <div class="form-inline">
+            <button class="ghost small" id="run-lobby">대기 화면으로</button>
+            <button class="danger small" id="run-reset">🔄 전체 초기화 (하트 리셋)</button>
+          </div>
+        </div>
+
+        <!-- 주관식 판정 패널 -->
+        <div id="verdict-panel" class="card hidden">
+          <label style="font-weight:800; display:block; margin-bottom:8px;">📢 주관식 답 공개 — 탈락 판정</label>
+          <p class="notice" id="verdict-key"></p>
+          <div id="verdict-list"></div>
+          <button class="primary" id="verdict-apply" style="width:100%; margin-top:8px;">✅ 판정 적용 (오답자 하트 -1)</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>👧 학생 목록 <span class="pill" id="player-count">0명</span></h2>
+        <div id="player-list"></div>
+      </div>
+    </aside>
+
+    <!-- 우측: 프로젝터용 화면 -->
+    <main id="admin-main">
+      <div id="admin-hud">
+        <div class="q" id="a-question">🏫 대기 중 — 학생들이 입장하고 있어요</div>
+        <div class="meta">
+          <span id="a-phase">대기</span>
+          <span id="a-timer"></span>
+          <span id="a-submitted"></span>
+        </div>
+      </div>
+      <div id="admin-canvas-wrap">
+        <canvas id="admin-canvas"></canvas>
+      </div>
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/render.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

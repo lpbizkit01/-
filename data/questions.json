@@ -1,0 +1,31 @@
+[
+  {
+    "id": "q_sample_1",
+    "type": "ox",
+    "text": "지구는 태양 주위를 돈다.",
+    "choices": [],
+    "answer": 0,
+    "timeLimit": 20
+  },
+  {
+    "id": "q_sample_2",
+    "type": "choice",
+    "text": "대한민국의 수도는 어디일까요?",
+    "choices": [
+      "서울",
+      "부산",
+      "대전",
+      "광주"
+    ],
+    "answer": 0,
+    "timeLimit": 30
+  },
+  {
+    "id": "q_sample_3",
+    "type": "subjective",
+    "text": "한글을 만든 조선의 왕은 누구일까요?",
+    "choices": [],
+    "answer": "세종대왕",
+    "timeLimit": 40
+  }
+]

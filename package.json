@@ -1,0 +1,13 @@
+{
+  "name": "classroom-quiz-arena",
+  "version": "1.0.0",
+  "description": "수업용 실시간 퀴즈 아레나 - 학생들이 모바일로 접속해 캐릭터를 움직이며 문제를 푸는 플랫폼",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
